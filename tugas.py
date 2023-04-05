@@ -11,7 +11,7 @@ def get_excel_download_link(df):
     # Untuk mengubah dataframe menjadi excel
     output = io.BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    df.to_excel(writer, index=False, sheet_name='After')
     writer.save()
     excel_data = output.getvalue()
     b64 = base64.b64encode(excel_data).decode('utf-8')
@@ -37,7 +37,6 @@ def create_table(df_spesific):
     st.write(html_syntax, unsafe_allow_html=True)
 
 def main():
-    # Streamlit
     st.title("Penugasan PPDM Pertama")
     st.markdown(f'''
                     Nama  : I Made Sudarsana Taksa Wibawa
@@ -70,7 +69,7 @@ def main():
         # tambahkan button untuk memproses data
         if (st.button("Proses Data")):
             st.write("---------")
-            st.subheader("Before")
+            st.subheader("Before Preprocessing")
             st.write(df_before)
 
             # Proses Preprocessing
@@ -101,7 +100,7 @@ def main():
 
             # Menampilkan hasil dan tombol download file excelnya
             st.write("---------")
-            st.subheader("After")
+            st.subheader("After Preprocessing")
             st.write(df_result)
             st.write("---------")
             st.markdown(get_excel_download_link(
