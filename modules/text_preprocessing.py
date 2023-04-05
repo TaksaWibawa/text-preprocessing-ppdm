@@ -97,7 +97,10 @@ norms = {
     'order': 'pesan',
     'sekli': 'sekali',
     'nnti': 'nanti',
-    'lagi': 'kembali'
+    'lagi': 'kembali',
+    'cepet': 'cepat',
+    'kan': 'itu',
+    'pas': 'waktu'
 }
 
 
@@ -122,18 +125,12 @@ def tokenize(sentence):
 
 
 def remove_stopwords(tokens):
-    # stopwords = nltk.corpus.stopwords.words('indonesian')
-    # filtered_tokens = [token for token in tokens if token not in stopwords]
     stopwords = StopWordRemoverFactory().get_stop_words()
     filtered_tokens = [token for token in tokens if token not in stopwords]
     return filtered_tokens
 
-# perlu update!
-
-
 def stemming(filtered_tokens):
     stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
-    # # stemmed_tokens = [re.sub(r'(.)\1+', r'\1', token) for token in stemmed_tokens]
     # menghilangkan huruf berulang di awal
     stemmed_tokens = [re.sub(r'^(\w)\1+', r'\1', token)
                       for token in stemmed_tokens]
