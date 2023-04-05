@@ -19,6 +19,23 @@ def get_excel_download_link(df):
     return href
 
 
+def create_table(df_spesific):
+    counter = 1
+    html_syntax = '''
+      <tr>
+        <th>No</th>
+        <th style="text-align: center">Reviews</th>
+      </tr>
+    '''
+    for data in df_spesific:
+        html_syntax += f'''<tr style="font-size: 13px">
+                <td>{counter}</td>
+                <td>{data}</td>
+            </tr>
+        '''
+        counter+=1
+    st.write(html_syntax, unsafe_allow_html=True)
+
 def main():
     # Streamlit
     st.title("Penugasan PPDM Pertama")
@@ -67,12 +84,12 @@ def main():
             st.write("---------")
             st.subheader("2. Tokenizing")
             df_specific = [tokenize(sentence) for sentence in df_specific]
-            st.write()
+            create_table(df_specific)
 
             st.write("---------")
             st.subheader("3. Remove Stopwords")
             df_specific = [remove_stopwords(tokens) for tokens in df_specific]
-            st.write(df_specific)
+            create_table(df_specific)
 
             st.write("---------")
             st.subheader("4. Stemming")
