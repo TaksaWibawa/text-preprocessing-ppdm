@@ -1,29 +1,3 @@
-# import pandas as pd
-# from modules.text_preprocessing import *
-# import streamlit as st
-
-# df = pd.read_excel('data/Dataset D.xlsx')
-# df = df.iloc[140:150]
-# df_specific = df['Reviews']
-
-# df_specific = df_specific.tolist()
-# df_specific = [case_folding(sentence) for sentence in df_specific]
-# df_specific = [tokenize(sentence) for sentence in df_specific]
-# df_specific = [remove_stopwords(tokens) for tokens in df_specific]
-# df_specific = [stemming(tokens) for tokens in df_specific]
-
-
-# data_before = df['Reviews'].tolist()
-# data_before = pd.DataFrame(data_before, columns=['Reviews'])
-
-# data_after = [''.join(df_specific[i]) for i in range(len(df_specific))]
-# data_after = pd.DataFrame(data_after, columns=['After Reviews'])
-
-# df_result = pd.concat([data_before, data_after], axis=1)
-
-# df_result.to_excel('data/Dataset D Hasil.xlsx', index=False)
-# print("Done!!")
-
 import streamlit as st
 import pandas as pd
 from modules.text_preprocessing import *
@@ -41,34 +15,81 @@ def get_excel_download_link(df):
     writer.save()
     excel_data = output.getvalue()
     b64 = base64.b64encode(excel_data).decode('utf-8')
-    href = f'<a href="data:application/octet-stream;base64,{b64}" download="result.xlsx">Download Excel file</a>'
+    href = f'<a href="data:application/octet-stream;base64,{b64}" download="Hasil Proses.xlsx">Download Excel file</a>'
     return href
 
 
 def main():
     # Streamlit
-    st.title("Penugasan")
+    st.title("Penugasan PPDM Pertama")
+    st.markdown(f'''
+                    Nama  : I Made Sudarsana Taksa Wibawa
+                    \nNIM   : 2108561109
+                    \nKelas : D
+                    \nLink Github : 
+                    <a href="https://github.com/TaksaWibawa/text-preprocessing-ppdm">https://github.com/TaksaWibawa/text-preprocessing-ppdm</a>
+                    \n-----
+                ''', unsafe_allow_html=True)
     st.sidebar.title("Options")
     file = st.sidebar.file_uploader("Upload a file", type=["xlsx"])
     if file is not None:
         df = pd.read_excel(file)
-        df = df.iloc[140:150]
+        st.subheader("Dataset yang diupload")
+        st.write(df)
+
+        # buat inputan untuk membatasi jumlah data yang akan diproses dalam streamlit
+        st.write("---------")
+        st.subheader("Masukan jumlah data yang akan diproses")
+        # masukan index awal
+        min_data = st.number_input(
+            "Masukan index awal", min_value=0, max_value=200, value=0)
+        # masukan index akhir
+        max_data = st.number_input(
+            "Masukan index akhir", min_value=0, max_value=200, value=10)
+        # memotong data
+        df = df.iloc[min_data:max_data]
         df_before = pd.DataFrame(df, columns=['Reviews'])
-        st.write("Before", df_before)
 
-        # Proses Preprocessing
-        df_specific = df['Reviews'].tolist()
-        df_specific = [case_folding(sentence) for sentence in df_specific]
-        df_specific = [tokenize(sentence) for sentence in df_specific]
-        df_specific = [remove_stopwords(tokens) for tokens in df_specific]
-        df_specific = [stemming(tokens) for tokens in df_specific]
+        # tambahkan button untuk memproses data
+        if (st.button("Proses Data")):
+            st.write("---------")
+            st.subheader("Before")
+            st.write(df_before)
 
-        # Mengubah hasil preprocessing menjadi dataframe
-        df_result = pd.DataFrame(df_specific, columns=['Reviews'])
+            # Proses Preprocessing
+            df_specific = df['Reviews'].tolist()
 
-        # Menampilkan hasil dan tombol download file excelnya
-        st.write("After", df_result)
-        st.markdown(get_excel_download_link(df_result), unsafe_allow_html=True)
+            st.write("---------")
+            st.subheader("1. Case Folding")
+            df_specific = [case_folding(sentence) for sentence in df_specific]
+            st.dataframe(df_specific)
+
+            st.write("---------")
+            st.subheader("2. Tokenizing")
+            df_specific = [tokenize(sentence) for sentence in df_specific]
+            st.write()
+
+            st.write("---------")
+            st.subheader("3. Remove Stopwords")
+            df_specific = [remove_stopwords(tokens) for tokens in df_specific]
+            st.write(df_specific)
+
+            st.write("---------")
+            st.subheader("4. Stemming")
+            df_specific = [stemming(tokens) for tokens in df_specific]
+            st.dataframe(df_specific)
+
+            # Mengubah hasil preprocessing menjadi dataframe
+            df_result = pd.DataFrame(df_specific, columns=['Reviews'])
+
+            # Menampilkan hasil dan tombol download file excelnya
+            st.write("---------")
+            st.subheader("After")
+            st.write(df_result)
+            st.write("---------")
+            st.markdown(get_excel_download_link(
+                df_result), unsafe_allow_html=True)
+
     else:
         st.write("Please upload a file")
 
