@@ -5,8 +5,6 @@ import base64
 import io
 
 # Fungsi untuk membuat link download file excel
-
-
 def get_excel_download_link(df):
     # Untuk mengubah dataframe menjadi excel
     output = io.BytesIO()
